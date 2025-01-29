@@ -1,11 +1,10 @@
 # House-price-prediction-using-flask
-This project demonstrates the predictive capabilities of a model trained on house price data using Linear Regression. The model is deployed using a Flask API, providing an interface to predict house prices based on input features.
+Ce projet démontre les capacités prédictives d'un modèle formé sur les données de prix des logements à l'aide de la régression linéaire. Le modèle est déployé à l'aide d'une API Flask, fournissant une interface permettant de prédire les prix des logements en fonction des caractéristiques d'entrée.
 
-For a detailed explanation, check out my blog post: [House Price Prediction using Flask for Beginners](https://techyscientists.blogspot.com/2021/07/house-price-prediction-using-flask.html)
 
 ## Installation
 
-You'll need to install the required libraries to run this web app on your local machine. These are listed in the requirements.txt file. The project was developed using Python 3.8.0 and Flask 2.0.1.<br><br> Install the necessary packages by running the following command in your terminal:<br><br>
+Vous devrez installer les bibliothèques requises pour exécuter cette application Web sur votre machine locale. Celles-ci sont répertoriées dans le fichier requirements.txt. Le projet a été développé à l'aide de Python 3.12.0 et Flask 2.0.1.<br><br>Installez les packages nécessaires en exécutant la commande suivante dans votre terminal :<br><br>
 
 ```
 pip install -r requirement.txt
@@ -13,9 +12,9 @@ pip install -r requirement.txt
 <br>
 <br>
 
-## Getting Started
+## Commencer
 
-After installing the required packages, you can start the application by executing the following command in your terminal:<br><br>
+Après avoir installé les packages requis, vous pouvez démarrer l'application en exécutant la commande suivante dans votre terminal :<br><br>
 ```
 python app.py
 ```
@@ -23,16 +22,16 @@ python app.py
 <br>
 
 ## Preview
-<img src='https://github.com/JafirDon/House-price-prediction-using-flask/blob/main/static/images/form.png'></img>
+<img src='../static/images/form.png'></img>
 <br>
 <br>
-<img src='https://github.com/JafirDon/House-price-prediction-using-flask/blob/main/static/images/prediction.png'></img>
+<img src='..static/images/prediction.png'></img>
 <br>
 <br>
 
 ## License
-MIT License
+LEKING Licence copyrigth (2025)
 <br>
 <br>
 
-### Thank you
+### Merci
