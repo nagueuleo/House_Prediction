@@ -22,10 +22,10 @@ python app.py
 <br>
 
 ## Preview
-<img src='../static/images/form.png'></img>
+<img src='static/images/form.png'></img>
 <br>
 <br>
-<img src='..static/images/prediction.png'></img>
+<img src='static/images/prediction.png'></img>
 <br>
 <br>
 
