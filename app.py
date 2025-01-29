@@ -14,7 +14,7 @@ API = "http://127.0.0.1:5000"
 
 MODEL_PATH = f'./model/house_price_model.pkl'
 SCALER_PATH = f'./model/scaler.pkl'
-IMG_SIDEBAR_PATH = "./assets/img.jpg"
+IMG_SIDEBAR_PATH = "./assets/maison.jpg"
 
 #Function to load the Model and the Scaler
 def load_pkl(fname):
@@ -27,38 +27,29 @@ scaler = load_pkl(SCALER_PATH)
 
 #Function to load the Iris Dataset
 def get_clean_data():
-  data = pd.read_csv("./dataset/house_price_dataset.csv")
-  
+  data = pd.read_csv("./dataset/regression_multiple.csv")
+  data.columns = data.columns.str.strip()
   X = pd.get_dummies(data)
 
   return X
 
 #Sidebar of the Streamlit App
 def add_sidebar():
-  st.sidebar.header("House Price Predictor `App 🏠`")
+  st.sidebar.header("Prédiction des Prix des Maisons `App 🏠`")
   image = np.array(Image.open(IMG_SIDEBAR_PATH))
   st.sidebar.image(image)
   st.sidebar.markdown("<hr/>", unsafe_allow_html=True)
-  st.sidebar.write("This Artificial Intelligence App can Predicts the Price of a House Given their Corresponding Parameters.")
+  st.sidebar.write("Cette application d'intelligence artificielle peut prédire le prix d'une maison en fonction de ses paramètres correspondants.")
 
-  st.sidebar.subheader('Select the Parameters of the House ✅:')
+  st.sidebar.subheader('Sélectionnez les paramètres de la maison ✅:')
   
   data = get_clean_data()
   
   slider_labels = [
-        ("Longitude", "longitude"),
-        ("Latitude", "latitude"),
-        ("Housing Median Age", "housing_median_age"),
-        ("Total Rooms", "total_rooms"),
-        ("Total Bedrooms", "total_bedrooms"),
-        ("Population", "population"),
-        ("Households", "households"),
-        ("Median Income", "median_income"),
-        ("<1 Hour Ocean", "ocean_proximity_<1H OCEAN"),
-        ("Inland", "ocean_proximity_INLAND"),
-        ("Island", "ocean_proximity_ISLAND"),
-        ("Near Bay", "ocean_proximity_NEAR BAY"),
-        ("Near Ocean", "ocean_proximity_NEAR OCEAN"),
+        ("Superficie ", "superficie"),
+        ("Nombre de chambres", " nombre_de_chambres"),
+        ("Proximité du centre", "proximite_du_centre")
+        
     ]
 
   input_dict = {}
@@ -74,7 +65,7 @@ def add_sidebar():
   st.sidebar.markdown("<hr/>", unsafe_allow_html=True)
 
   st.sidebar.markdown('''
-  🧑🏻‍💻 Created by [Luis Jose Mendez](https://github.com/mendez-luisjose).
+  🧑🏻‍💻 Développer par [Lionel NAGUEU](https://github.com/nagueuleo/House_Prediction).
   ''')
 
   return input_dict
@@ -82,7 +73,7 @@ def add_sidebar():
 def get_scaled_values(input_dict):
   data = get_clean_data()
   
-  X = data.drop(['median_house_value'], axis=1)
+  X = data.drop(['Prix'], axis=1)
   X = pd.get_dummies(X)
   
   scaled_dict = {}
@@ -99,17 +90,14 @@ def get_scaled_values(input_dict):
 def get_radar_chart(input_data):
   input_data = get_scaled_values(input_data)
   
-  categories = ['Longitude', 'Latitude', 'Housing Median Age', 'Total Rooms', 'Total Bedrooms', 'Population', 'Households', 'Median Income', '<1 Hour Ocean', 'Inland', 'Island', 'Near Bay', 'Near Ocean']
+  categories = ['Superficie', 'Nombre de chambres', 'Proximité du centre']
 
   fig = go.Figure()
 
   fig.add_trace(go.Scatterpolar(
         r=[
-          input_data['longitude'], input_data['latitude'], input_data['housing_median_age'],
-          input_data['total_rooms'], input_data['total_bedrooms'], input_data['population'],
-          input_data['households'], input_data['median_income'], input_data['ocean_proximity_<1H OCEAN'],
-          input_data['ocean_proximity_INLAND'], input_data['ocean_proximity_ISLAND'], input_data['ocean_proximity_NEAR BAY'],
-          input_data['ocean_proximity_NEAR OCEAN']
+          input_data['superficie'], input_data['nombre_de_chambres'], input_data['proximite_du_centre'],
+          
         ],
         theta=categories,
         fill='toself',
@@ -144,19 +132,19 @@ def add_predictions(input_data) :
     #pred_result = resp.json()["Results"]["price_result"]
     
     pred_result = round(pred_result, 2)
-    pred_result = f"{pred_result}$"
+    pred_result = f"{pred_result}€"
 
-    st.markdown("### House Price Prediction 💸")
-    st.write("<span class='diagnosis-label diagnosis price'>Machine Learning Model Result ✅:</span>",  unsafe_allow_html=True)
+    st.markdown("### Prédiction des prix des maisons 💸")
+    st.write("<span class='diagnosis-label diagnosis price'>Model de Machine learning ✅:</span>",  unsafe_allow_html=True)
     
     _, col, _ = st.columns([0.2, 1, 0.2])
     
     with col:
-        st.metric("House Price 🏚️:", f"{pred_result}", "Dollars ($)")
+        st.metric("Prix de la maison:", f"{pred_result}", "Euro (€)")
 
 def main() :  
     st.set_page_config(
-        page_title="House Price Predictor",
+        page_title="Prédicteur du prix de maisons",
         layout="wide",
         initial_sidebar_state="expanded"
     )
@@ -184,37 +172,37 @@ def main() :
     )    
 
     with st.container() :
-        st.title("House Price Predictor 🏡")
+        st.title("Prédiction de prix de maisons")
         st.write("This App predicts using a XGBRegressor Machine Learning Model the Price in Dollars ($) of a House. You can also Update the measurements by hand using sliders in the sidebar.")
         st.markdown("<hr/>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.markdown('### Radar Chart of the Parameters 📊')
+        st.markdown('### Graphique radar des paramètres 📊')
         radar_chart = get_radar_chart(input_data)
         st.plotly_chart(radar_chart)
         
-        st.markdown('### Probability Plot of the Regressor Model 📉')
+        st.markdown('### Diagramme de probabilité du modèle de régression 📉')
         st.image("./assets/probability_plot_model.png")
 
         st.markdown("---", unsafe_allow_html=True)
-        st.write("`This Artificial Intelligence can Assist for the Price of a House, but Should Not be used as a Substitute for a Final Diagnosis and Prediction.`")
+        st.write("`Cette intelligence artificielle peut aider à déterminer le prix d'une maison, mais ne doit pas être utilisée comme substitut à un diagnostic et à une prédiction finale.`")
 
 
     with col2:
-        st.markdown('### Evaluation of the Model 📈')
+        st.markdown('### Évaluation du modèle 📈')
         st.image("./assets/model_evaluation.png")
         
         st.markdown("<hr/>", unsafe_allow_html=True)
         add_predictions(input_data)
 
         st.markdown("---", unsafe_allow_html=True)
-        st.markdown('### Model Displot 📊')
+        st.markdown('### Histogramme du modèle 📊')
         st.image("./assets/model_displot.png")
         
 
 if __name__ == "__main__" :
     main()
 
-    print("App Running!")
+    print("Execution de l'application!")

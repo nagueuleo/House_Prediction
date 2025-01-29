@@ -1,26 +1,24 @@
-# House Price Prediction with Scikit Learn, Streamlit and Deployed with Flask
+# Prediction des prix des appartement en utilisant Straemlit et Flask
 
-![](./assets/prev-1.gif)
 
-## House Price Prediction with Scikit Learn, Numpy, Pandas, Streamlit and Deployed with Flask 
+## Prediction des prix des appartement en utilisant Straemlit et Flask
 
-The Model was trained with Tabular House Prices Dataset and with the `XGBRegressor` Architecture. The Model predicts the Price of a given House, also the U.I. to select the parameters of the House was built with Streamlit and the API with Flask. 
+Le modèle a été formé avec le jeu de données regression multiple et avec l'architecture « XGBRegressor ». Le modèle prédit le prix d'une maison donnée, l'interface utilisateur pour sélectionner les paramètres de la maison a également été construite avec Streamlit et l'API avec Flask.
 
-## Run it Locally
+## Exécuter en locale
 
-Test it Locally by running the `app.py` file, built with `Streamlit`, and the `api.py` file with `Flask`. Remember first to run the `api.py` file, copy the http url and saved in the API variable of the `app.py` file, and uncomment the code lines.
+Testez-le localement en exécutant le fichier `app.py`, créé avec `Streamlit`, et le fichier `api.py` avec `Flask`. N'oubliez pas d'exécuter d'abord le fichier `api.py`, de copier l'url http et de l'enregistrer dans la variable API du fichier `app.py`, puis de décommenter les lignes de code.
 
-## App made with Streamlit
+## Lancer l'application streamlit
 ```sh
 streamlit run app.py
 ```
 
-## Deployed with Flash
+## Deploiement avec Flask
 ```sh
 python3 api.py
 ```
 
-![](./assets/prev-2.gif)
 
 ## Resources
-- House Price Dataset: https://www.kaggle.com/datasets/shibumohapatra/house-price
+- Jeu de donnée: https://github.com/nagueuleo/House_Prediction
