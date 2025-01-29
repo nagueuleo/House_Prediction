@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Prédiction de prix des Maisons</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href="{{ url_for('static', filename='css/main.css') }}">
+    <script src='main.js'></script>
+</head>
+
+<body>
+    <div id ="title">
+    </div>
+    <div class="register_page">
+        <div class="form">
+            <h2>Estimation de Prix des Maisons</h2>
+            <form action="{{url_for('predict')}}" method="POST">
+                <label for="bedrooms">Superficie:</label>
+                <input type="number" name="superficie" placeholder="Entrez la superficie"><br>
+
+                <label for="bathrooms">Nombre de Chambre:</label>
+                <input type="number" name="chambres" placeholder="Entrez le nombre de chambre"><br>
+
+                <label for="floors">Proximité du centre:</label>
+                <input type="number" name="Proximite" placeholder="Entrez la Proximité du centre"><br>
+
+                <input type="submit" value="Prédire" class="submit">
+            </form>
+            <p>Prix de la maison est: {{data}}</p>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
