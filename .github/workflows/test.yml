@@ -1,5 +1,9 @@
 name: House Prediction Flask ML
-on: [push]
+on: 
+  push :
+    branches: ["main", "leo"]
+  pull_request:
+    branches: ["main", "leo"]
 jobs:
   flask-ml-ci:
     runs-on: ubuntu-latest
