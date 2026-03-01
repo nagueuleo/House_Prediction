@@ -1,7 +1,7 @@
 name: House Prediction Flask ML
 on: [push]
 jobs:
-  ci-cd:
+  flask-ml-ci:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -11,22 +11,35 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Install requirements
+    - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Test Flask app
-      run: |
-        python app.py --help || echo "Flask app structure OK"
-    
-    - name: Test ML model
+    # Test spécifique à ton app.py
+    - name: Test model loading (model1.pkl)
       run: |
         python -c "
-        import joblib, sklearn, pandas, numpy
-        model = joblib.load('model.pkl')
-        print('✅ ML model loaded!')
+        import pickle, numpy as np
+        model = pickle.load(open('model1.pkl', 'rb'))
+        print('✅ Model1 loaded:', type(model))
+        test_input = np.array([[100, 3, 1]], dtype=np.float64)
+        pred = model.predict(test_input)
+        print('✅ Prediction OK:', pred[0])
         "
     
-    - name: Test house.py
-      run: python house.py || echo "house.py OK"
+    - name: Test Flask app structure
+      run: |
+        python -c "
+        from app import app
+        with app.test_client() as client:
+            response = client.get('/')
+            assert response.status_code == 200
+        print('✅ Flask routes OK')
+        "
+    
+    - name: Verify dependencies
+      run: |
+        python -c "
+        import flask, numpy, pickle
+        print('✅ All imports OK')
+        "
