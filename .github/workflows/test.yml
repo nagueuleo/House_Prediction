@@ -1,18 +1,80 @@
-name: house-prediction-test
-on: [push]
+name: House Prediction ML Pipeline
+on:
+  push:
+    branches: [main, leo]
+  pull_request:
+    branches: [main]
+
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v2
-        - name: Set up Python 3.7
-            uses: actions/setup-python@v1
-            with:
-                python-version: 3.7
-        - name: Install dependencies
-            run: |
-                python -m pip install --upgrade pip
-                pip install -r requirements.txt
-        - name: Test with pytest
-            run: |
-                pytest
+  ml-pipeline:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10']
+    
+    steps:
+    # 1. Checkout code
+    - uses: actions/checkout@v4
+    
+    # 2. Setup Python
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    # 3. Cache pip (accélère les builds)
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+    
+    # 4. Install dependencies ML
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov black flake8
+    
+    # 5. Code quality
+    - name: Lint & Format
+      run: |
+        flake8 .
+        black --check .
+    
+    # 6. Run tests (tes fichiers test_*.py)
+    - name: Run pytest
+      run: |
+        pytest tests/ -v --cov=src --cov-report=xml
+    
+    # 7. Train model (ton notebook ou script)
+    - name: Train model
+      if: success()
+      run: |
+        pip install -e .  # Si tu as setup.py
+        python src/train.py || jupyter nbconvert --to python src/notebook.ipynb --execute
+    
+    # 8. Test predictions
+    - name: Test predictions
+      if: success()
+      run: |
+        python src/predict.py --test
+    
+    # 9. Upload model & coverage
+    - name: Upload artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: model-${{ matrix.python-version }}
+        path: |
+          models/*.pkl
+          coverage.xml
+          src/model.joblib
+    
+    # 10. CD: Deploy (optionnel)
+    - name: Deploy to HuggingFace/Cloud
+      if: success() && github.ref == 'refs/heads/main'
+      run: |
+        echo "✅ Model ready for deployment!"
+        # pip install huggingface_hub
+        # huggingface-cli upload ...
