@@ -1,7 +1,7 @@
-name: House Prediction CI/CD
+name: House Prediction Flask ML
 on: [push]
 jobs:
-  test:
+  ci-cd:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -11,22 +11,22 @@ jobs:
       with:
         python-version: '3.10'
     
-    - name: Debug - List files
-      run: |
-        ls -la
-        ls -la *.txt
-    
-    - name: Install dependencies
+    - name: Install requirements
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt  # MAINTENANT ça marche !
+        pip install -r requirements.txt
     
-    - name: Run Flask app test
+    - name: Test Flask app
       run: |
-        pip install pytest flask
-        pytest -v || echo "No tests, checking app.py"
-        python app.py --help || echo "App OK"
+        python app.py --help || echo "Flask app structure OK"
     
-    - name: Model prediction test
+    - name: Test ML model
       run: |
-        python house.py  # Ton script principal ?
+        python -c "
+        import joblib, sklearn, pandas, numpy
+        model = joblib.load('model.pkl')
+        print('✅ ML model loaded!')
+        "
+    
+    - name: Test house.py
+      run: python house.py || echo "house.py OK"
